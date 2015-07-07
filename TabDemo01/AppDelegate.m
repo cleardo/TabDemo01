@@ -8,15 +8,85 @@
 
 #import "AppDelegate.h"
 
+@implementation TabDemoViewController
+
+- (id) initWithPageNumber: (int)pageNumber {
+    self = [super init];
+    
+    if (self != nil) {
+        page = pageNumber;
+        self.title = [NSString stringWithFormat:@"page %d", page];
+        self.tabBarItem = [[UITabBarItem alloc] initWithTitle: [NSString stringWithFormat:@"page %d", page]
+                                                        image:nil
+                                                          tag:page];
+    }
+    
+    return self;
+}
+- (void) loadView {
+    [super loadView];
+    
+    CGRect bounds = [ [UIScreen mainScreen] applicationFrame];
+    
+    UIView *contentView  = [[UIView alloc] initWithFrame: bounds];
+    
+    textView = [ [ UITextView alloc] initWithFrame: CGRectMake(0.0, 150.0, bounds.size.width - 100.0, bounds.size.height)];
+    
+    textView.text = [ [ NSString alloc] initWithFormat: @"text paget %d", page];
+    
+    textView.textColor = [UIColor redColor];
+    
+    textView.editable = NO;
+    
+    // textView.frame = CGRectMake(1000.0, 150.0, 0, 0);
+    
+    // [view addSubview:textView];
+    
+    self.view = contentView;
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    [self.view addSubview: textView];
+    
+}
+
+- (void) dealloc {
+    
+}
+
+@end
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
 
+@synthesize window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    CGRect screenBounds = [[ UIScreen mainScreen] bounds];
+    
+    self.window = [[ UIWindow alloc] initWithFrame: screenBounds];
+    
+    viewControllers = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < 5; i++) {
+        NSLog(@"%d", i);
+        [viewControllers addObject: [[TabDemoViewController alloc] initWithPageNumber: i]];
+        
+    }
+    
+    
+    tabBarController = [[UITabBarController alloc] init];
+    
+    tabBarController.viewControllers = viewControllers;
+    
+    [window addSubview:tabBarController.view];
+    
+    [window makeKeyAndVisible];
+    
     return YES;
 }
 
